@@ -4,8 +4,15 @@ namespace App\Admin\Controller;
 // use specifies file and namespace directory
 use App\Repository\PagesRepository;
 
+use App\Admin\Support\AuthService;
+
 class PagesAdminController extends AbstractAdminController {
-    public function __construct(private PagesRepository $pagesRepository) {}
+    public function __construct(
+        AuthService $authService,
+        private PagesRepository $pagesRepository
+        ) {
+            parent::__construct($authService);
+        }
 
     public function index() {
         $page = $this->pagesRepository->get();
@@ -47,13 +54,40 @@ class PagesAdminController extends AbstractAdminController {
             'errors' => $errors
         ]);
     }
+
     public function delete() {
-        $page = $this->pagesRepository->get();
         $id = @(int) ($_POST['id'] ?? 0);
         $this->pagesRepository->delete($id);
+        header('Location: index.php?route=admin/pages');
+    }
+    
+    public function edit() {
+        $errors = [];
+        $id = @(int) ($_GET['id'] ?? 0);
+        
+        //var_dump($_POST);
+        if (!empty($_POST)) {
+            // var_dump($title);
+            // var_dump($content);
+            $title = @(string) ($_POST['title'] ?? '');
+            $content = @(string) ($_POST['content'] ?? '');
 
-        $this->render('index', [
-            'page' => $page
+            if (!empty($title) and !empty($content)) {
+                $this->pagesRepository->edit($id, $title, $content);
+                header('Location: index.php?route=admin/pages');
+                return;
+            }
+            else $errors[] = 'Please fill out all fields';
+        }
+        
+        $page = $this->pagesRepository->fetchById($id);
+        $this->render('edit', [
+            'page' => $page,
+            'errors' => $errors
         ]);
+    }
+
+    function login() {
+        
     }
 }

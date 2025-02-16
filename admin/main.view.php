@@ -16,6 +16,9 @@
             <p>A custom-made CMS system</p>
         <?php //var_dump($page);?>
         <nav>
+            <?php if ($isLoggedIn): ?>
+                <a href="index.php?<?php echo http_build_query(['route' => 'admin/logout']); ?>">Logout</a>
+            <?php endif; ?>
         </nav>
     </header>
     <main>

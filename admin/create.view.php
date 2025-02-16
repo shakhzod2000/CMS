@@ -9,9 +9,10 @@
 <?php endif; ?>
 
 <form method="POST" action="index.php?route=admin/pages/create">
+    <input type="hidden" name="_csrf" value="<?php echo e(csrf_token()); ?>" />
     <label for="title">Title:</label>
     <input type="text" 
-        name="title" 
+        name="title"
         value="<?php if (!empty($_POST['title'])) echo e($_POST['title']);?>"
         id="title" />
 

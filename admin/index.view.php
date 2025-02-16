@@ -1,5 +1,5 @@
 <h1>Admin: Manage Pages</h1>
-<?php //var_dump($page);?>
+<?php //var_dump($_POST);?>
 <table style="min-width: 100%">
     <thead>
         <tr>
@@ -18,14 +18,16 @@
                 <td><?php echo e($object->slug); ?></td>
                 <td><?php echo e($object->content); ?></td>
                 <td>
-                    <form method="POST" action="index.php?<?php 
+                    <a href="index.php?<?php 
+                        echo http_build_query(['route' => 'admin/pages/edit', 'id' => $object->id]);
+                    ?>">Edit</a>
+                    
+                    <form style="display: inline;" method="POST" action="index.php?<?php 
                         echo http_build_query(['route' => 'admin/pages/delete']);?>">
+                        <input type="hidden" name="_csrf" value="<?php echo e(csrf_token());?>" />
                         <input type="hidden" name="id" value="<?php echo e($object->id);?>" />
-                        <input type="submit" value="Delete" />
+                        <input type="submit" value="Delete" class="btn-link" />
                     </form>
-                    <!-- <a href="index.php?<?php //echo http_build_query(
-                        // ['route' => 'admin/pages/delete', 'id' => $object->id]);?>"
-                    >Delete</a> -->
                 </td>
             </tr>
             <?php endforeach; ?>
